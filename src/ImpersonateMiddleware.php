@@ -42,8 +42,8 @@ class ImpersonateMiddleware
      */
     public function handle($request, Closure $next)
     {
-        if (! $this->shouldIgnore() && null !== session('masquerading')) {
-            $this->auth->setUser(User::find(session('masquerading.id')));
+        if (! $this->shouldIgnore() && null !== session('impersonate')) {
+            $this->auth->setUser(User::find(session('impersonate.id')));
         }
 
         return $next($request);

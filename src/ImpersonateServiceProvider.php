@@ -4,6 +4,7 @@ namespace J84115\Impersonate;
  
 use Illuminate\Routing\Router;
 use Illuminate\Support\ServiceProvider;
+use J84115\Impersonate\Http\Controllers\ImpersonateController;
 
 class STANDARD {}
 
@@ -23,17 +24,18 @@ class ImpersonateServiceProvider extends ServiceProvider
 
         // TODO: tommorow
         // $router = $this->app['router'];
-        // $router->macro('impersonate', function () use ($router) {
-        //     $router->get(
-        //         '/impersonate/take/{id}',
-        //         '\J84115\Impersonate\Http\Controllers\ImpersonateController@take'
-        //     )->name('impersonate.take');
+        $router->macro('impersonate', function () use ($router) {
+            $router->get(
+                '/impersonate/login/{uid}',
+                [ImpersonateController::class, 'login']
+            )->name('impersonate.login');
 
-        //     $router->get(
-        //         '/impersonate/leave',
-        //         '\J84115\Impersonate\Http\Controllers\ImpersonateController@leave'
-        //     )->name('impersonate.leave');
-        // });
+            $router->get(
+                '/impersonate/logout',
+                [ImpersonateController::class, 'logout']
+            )->name('impersonate.logout');
+            // dd(1);
+        });
 
 
 
