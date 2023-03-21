@@ -23,17 +23,17 @@ class ImpersonateController extends Controller
             ], 400);
         }
 
-        // check the user actually exists
         $userModel = get_class($request->user());
         $user = $userModel::findOrFail($uid);
 
-        // TODO
-        // $this->authorize('masquerade', $user);
-
-        // TODO
-        // if ($user->admin) {
-        //     return response()->json(['impersonate' => false, 'error' => ['message' => 'You cannot masquerade as another admin!']], 400);
-        // }
+        if (! $user->canImpersonate) {
+            return response()->json([
+                'impersonate' => false,
+                'error' => [
+                    'message' => 'You cannot masquerade as another admin!'
+                ]
+            ], 400);
+        }
 
         session([
             'impersonate' => [
@@ -58,7 +58,10 @@ class ImpersonateController extends Controller
         $impersonateAs = session('impersonate.id');
 
         if ($impersonateAs) {
-            session(['impersonate' => null, 'impersonator' => null]);
+            session([
+                'impersonate' => null,
+                'impersonator' => null
+            ]);
 
             return redirect()->route('dashboard', $impersonateAs);
         }
