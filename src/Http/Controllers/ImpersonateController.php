@@ -7,6 +7,8 @@ use Illuminate\Routing\Controller;
 
 class ImpersonateController extends Controller
 {
+    private string $route = 'dashboard';
+
     /**
      * Impersonate a user.
      */
@@ -15,24 +17,14 @@ class ImpersonateController extends Controller
         $me = $request->user();
 
         if ($me->id == $uid) {
-            return response()->json([
-                'impersonate' => false,
-                'error' => [
-                    'message' => 'You cannot masquerade as yourself!'
-                ]
-            ], 400);
+            return redirect()->route($this->route);
         }
 
         $userModel = get_class($request->user());
         $user = $userModel::findOrFail($uid);
 
         if (! $user->impersonatable()) {
-            return response()->json([
-                'impersonate' => false,
-                'error' => [
-                    'message' => 'You cannot masquerade as another admin!'
-                ]
-            ], 400);
+            return redirect()->route($this->route);
         }
 
         session([
@@ -44,10 +36,7 @@ class ImpersonateController extends Controller
             'impersonator' => $me->id
         ]);
 
-        return response()->json([
-            'impersonate' => true,
-            'redirect' => route('dashboard')
-        ]);
+        return redirect()->route($this->route);
     }
 
     /**
@@ -63,9 +52,9 @@ class ImpersonateController extends Controller
                 'impersonator' => null
             ]);
 
-            return redirect()->route('dashboard', $impersonateAs);
+            return redirect()->route($this->route);
         }
 
-        return redirect()->route('dashboard');
+        return redirect()->route($this->route);
     }
 }
