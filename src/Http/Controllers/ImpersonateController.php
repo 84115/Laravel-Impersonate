@@ -26,7 +26,7 @@ class ImpersonateController extends Controller
         $userModel = get_class($request->user());
         $user = $userModel::findOrFail($uid);
 
-        if (! $user->canImpersonate) {
+        if (! $user->impersonatable()) {
             return response()->json([
                 'impersonate' => false,
                 'error' => [
