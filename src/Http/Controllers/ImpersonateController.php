@@ -4,32 +4,33 @@ namespace J84115\Impersonate\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
-use App\Models\User;
 
 class ImpersonateController extends Controller
 {
     /**
-     * Impersonate as a user.
-     *
-     * @param \Illuminate\Http\Request $request
-     *
-     * @return \Illuminate\Http\JsonResponse
+     * Impersonate a user.
      */
     public function login(Request $request, $uid)
     {
-        $me = auth()->user();
+        $me = $request->user();
 
         if ($me->id == $uid) {
-            return response()->json(['impersonate' => false, 'error' => ['message' => 'You cannot masquerade as yourself!']], 400);
+            return response()->json([
+                'impersonate' => false,
+                'error' => [
+                    'message' => 'You cannot masquerade as yourself!'
+                ]
+            ], 400);
         }
 
         // check the user actually exists
-        $user = User::findOrFail($uid);
+        $userModel = get_class($request->user());
+        $user = $userModel::findOrFail($uid);
 
-        // WIP
+        // TODO
         // $this->authorize('masquerade', $user);
 
-        // WIP
+        // TODO
         // if ($user->admin) {
         //     return response()->json(['impersonate' => false, 'error' => ['message' => 'You cannot masquerade as another admin!']], 400);
         // }
@@ -43,13 +44,14 @@ class ImpersonateController extends Controller
             'impersonator' => $me->id
         ]);
 
-        return response()->json(['impersonate' => true, 'redirect' => route('dashboard')]);
+        return response()->json([
+            'impersonate' => true,
+            'redirect' => route('dashboard')
+        ]);
     }
 
     /**
-     * Stop impersonate.
-     *
-     * @return \Illuminate\Http\JsonResponse
+     * Stop impersonating.
      */
     public function logout()
     {
