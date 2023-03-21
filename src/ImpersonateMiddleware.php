@@ -5,7 +5,6 @@ namespace J84115\Impersonate;
 use Closure;
 use Illuminate\Contracts\Auth\Guard;
 use Illuminate\Http\Request;
-use App\Models\User;
 
 class ImpersonateMiddleware
 {
@@ -42,8 +41,10 @@ class ImpersonateMiddleware
      */
     public function handle($request, Closure $next)
     {
+        $userModel = get_class($this->auth->getUser());
+
         if (! $this->shouldIgnore() && null !== session('impersonate')) {
-            $this->auth->setUser(User::find(session('impersonate.id')));
+            $this->auth->setUser($userModel::find(session('impersonate.id')));
         }
 
         return $next($request);
