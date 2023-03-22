@@ -23,7 +23,7 @@ class ImpersonateController extends Controller
         $userModel = get_class($request->user());
         $user = $userModel::findOrFail($uid);
 
-        if (! $me->impersonatable()) {
+        if ($me->impersonator() && $me->impersonatable()) {
             return redirect()->route($this->route);
         }
 
