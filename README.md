@@ -7,7 +7,7 @@ You can login to another user through `{app_url}/impersonate/login/{user_id}`.
 And you can end the session with `{app_url}/impersonate/logout`.
 
 ## Install Package
-`composer require j84115/impersonate`
+~~`composer require j84115/impersonate`~~ Not yet on Packagist. Install manually.
 
 ## Add Sevice Provider
 Add the Package to `config/app.php`
