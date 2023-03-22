@@ -1,5 +1,5 @@
 # Laravel-Impersonate
-A simple Laravel Package to temporaily login as other users.
+A simple Laravel Package to temporarily login as other users.
 
 ## Usage
 You can login to another user through `{app_url}/impersonate/login/{user_id}`.
